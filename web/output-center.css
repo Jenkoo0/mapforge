@@ -1,0 +1,35 @@
+/* OutputCenter owns its disclosure. Include after studio-skin.css. */
+.output-center[data-output-disclosure],.studio-refresh .output-center[data-output-disclosure] {display:block;padding:16px 19px}
+.output-center[data-output-disclosure][hidden],.studio-refresh .output-center[data-output-disclosure][hidden] {display:none}
+.output-center[data-output-disclosure] .output-summary {display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:15px}
+.output-center[data-output-disclosure] .output-heading {min-width:0;align-items:flex-start}
+.output-center[data-output-disclosure] .output-heading>div {min-width:0}
+.output-center[data-output-disclosure] .output-map-name {font-size:16px;line-height:1.45;margin:2px 0 0;overflow-wrap:anywhere;color:var(--text)}
+.output-center[data-output-disclosure] .output-summary-state {margin:3px 0 0;font-size:10px;line-height:1.55;color:var(--muted)}
+.output-center[data-output-disclosure] .output-details-toggle {min-height:44px;white-space:normal;max-width:150px;font-size:11px}
+.output-center[data-output-disclosure] .output-details-toggle:focus-visible {outline:2px solid var(--studio-accent,var(--lime));outline-offset:3px}
+.output-center[data-output-disclosure]>.output-status {margin:10px 0 8px;font-size:11px;line-height:1.65}
+.output-center[data-output-disclosure][data-output-state="error"]>.output-status,.output-center[data-output-disclosure][data-output-state="error"] .output-icon {color:var(--danger)}
+.output-center[data-output-disclosure] .output-availability {display:flex;align-items:center;flex-wrap:wrap;gap:8px 13px;min-width:0}
+.output-center[data-output-disclosure] .output-file-count {font-size:10px;line-height:1.5;color:var(--studio-accent,var(--lime));flex-shrink:0}
+.output-center[data-output-disclosure] .output-summary-download {min-width:0;max-width:100%;font-size:11px;line-height:1.6;overflow-wrap:anywhere;text-decoration:underline;text-underline-offset:3px;color:var(--text)}
+.output-center[data-output-disclosure] .output-availability button {min-height:40px;font-size:10px}
+.output-center[data-output-disclosure] .output-details {margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.output-center[data-output-disclosure] .output-details[hidden] {display:none}
+.output-center[data-output-disclosure] .output-details>.output-project {margin-bottom:10px}
+.output-center[data-output-disclosure] .output-details>.output-actions {display:flex;flex-direction:row;flex-wrap:wrap;gap:9px;max-width:none;margin:10px 0}
+.output-center[data-output-disclosure] .output-details>.micro {font-size:10px;line-height:1.7;margin:8px 0}
+.output-center[data-output-disclosure] .output-details>.output-problem {color:var(--danger);padding:11px 13px;background:#b43a5109;border:1px solid #b43a5133;border-radius:7px;margin:9px 0;font-size:12px;line-height:1.7}
+.output-center[data-output-disclosure][data-output-collapsed="true"] {padding-block:13px}
+@media(max-width:600px) {
+ .output-center[data-output-disclosure],.studio-refresh .output-center[data-output-disclosure] {padding:15px}
+ .output-center[data-output-disclosure] .output-summary {gap:10px;align-items:start}
+ .output-center[data-output-disclosure] .output-heading {gap:8px}
+ .output-center[data-output-disclosure] .output-map-name {font-size:14px}
+ .output-center[data-output-disclosure] .output-summary-state {font-size:9px}
+ .output-center[data-output-disclosure] .output-details-toggle {font-size:10px;padding:9px 10px;max-width:117px}
+ .output-center[data-output-disclosure] .output-details>.output-actions {display:grid;grid-template-columns:minmax(0,1fr)}
+ .output-center[data-output-disclosure] .output-details>.output-actions button {min-height:44px}
+ .output-center[data-output-disclosure] .output-availability button {min-height:44px;width:100%}
+ .output-center[data-output-disclosure] .output-summary-download {font-size:11px}
+}

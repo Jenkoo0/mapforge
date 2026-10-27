@@ -1,0 +1,9 @@
+import {ONLY_UP_LAYOUTS,normalizeAscentLayout} from './only-up-architecture.js';
+import {measureOnlyUpRoute} from './only-up.js';
+
+/** Shared project guide. Depends on route geometry, not the export pipeline. */
+export function onlyUpGuide(map){
+ if(map?.config?.mode!=='obby'||map.config.obbyStyle!=='onlyup'||!map.onlyUp)return '';
+ const config=map.config,geometry=measureOnlyUpRoute(map),chapters=map.onlyUp.chapters;
+ return `# ${config.name}\n\n${config.stages} Abschnitte · ${geometry.length} Studs gemessene Route · ${geometry.height} Studs Höhengewinn. RouteKey: ${map.key}.\n\n## Eigene Bauform\n\n${ONLY_UP_LAYOUTS[normalizeAscentLayout(config.ascentLayout)].label}: ${ONLY_UP_LAYOUTS[normalizeAscentLayout(config.ascentLayout)].description} Vier Themen und drei Bauformen lassen sich unabhängig kombinieren. Materialien und Landmarken folgen dem Thema; der Grundriss folgt der Bauform.\n\n## Vier Kapitel, acht Schwerpunkte\n\n${chapters.map((chapter,index)=>`${index+1}. **${chapter.title}** · Abschnitte ${Math.max(1,chapter.start)}–${chapter.end}\n${chapter.sections.map(section=>`   - ${section.title}: ${section.skill} · Abschnitt ${section.start}–${section.end}`).join('\n')}`).join('\n')}\n\nStage 0 ist der Start. Checkpoints liegen alle ${config.checkpointEvery} Abschnitte sowie an Start und Ziel. Die Aufgaben unterscheiden sich durch echte Landeflächen, Versatz und Anstieg. Die Theme-Struktur begleitet die Route als Landmarke.\n\nDie Messwerte stammen aus der erzeugten Geometrie und prüfen Lücken, Höhen, Landeflächen und Freiraum. Sie sind keine Simulation der Roblox-Figur. Alle Sprünge, Respawn, Mehrspieler, Touch-Steuerung, Streaming, Speichern und Bildrate sind in Roblox Studio und auf echten Geräten noch zu prüfen. Dieser Export bestätigt keinen ausgeführten Studio-Spieltest.\n`;
+}

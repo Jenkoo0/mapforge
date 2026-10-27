@@ -1,0 +1,103 @@
+# Only-Up: längere, lesbare Aufstiege mit eigenem Thema
+
+Recherche vom 26. Oktober 2026. Acht Primärquellen wurden online geprüft. Diese Notiz begründet Entwurfsentscheidungen; sie bestätigt keinen Roblox-Spieltest und keine gemessene Laufzeit oder Bildrate. Die beiden Fassungen unter `docs/` und `web/` enthalten denselben Text.
+
+## Konkrete Entscheidungen für MapForge
+
+1. **Ein Aufstieg, vier Kapitel.** Sockel, mittlere Arbeits- oder Gartenebene, offene Höhenwege und Gipfel erhalten jeweils ein erkennbares Hauptmotiv. Materialfamilie, Akzentfarbe und zentrale Turmsilhouette verbinden die Kapitel. Mehr Länge entsteht aus mehr unterschiedlichen Sprungfolgen und tatsächlicher Höhe.
+2. **Können über kontrollierbare Anforderungen.** Absprungposition, Richtungskorrektur, schmale Landung und Richtungswechsel werden erst einzeln eingeführt und später kombiniert. Reine Laufwege können kurze Erholungen bilden. Kleine Landeflächen allein beweisen noch kein gutes Skill-Level.
+3. **Den nächsten Schritt sehen.** Oberseiten der Kernroute haben eine konsistente, vom Unterbau unterscheidbare Gestaltung. Vor einem Sprung müssen Absprungkante und Ziel erkennbar sein. Balken, Pflanzen und Rohrschmuck stehen seitlich oder unterhalb der Landeflächen; kein dekoratives Bauteil darf unbemerkt als zusätzliche Hürde wirken.
+4. **Details dort, wo man sie wahrnimmt.** Größere Form und Silhouette zuerst, wiederkehrende mittlere Strukturen danach, kleine Details zuletzt. Gipfelkrone und Ferntürme benötigen weniger Geometrie als nahe Plattformen. Wiederholte Elemente teilen Material- und Mesh-Identität.
+
+Vier Kapitel, deren Länge und die genaue Hindernisabfolge sind unsere Produktentscheidung. Die Quellen nennen keine universell perfekte Only-Up-Länge, Anzahl von Sprüngen oder Erfolgsquote.
+
+## 1. Spielraum vor finaler Dekoration
+
+**Quellenbefund:** Roblox empfiehlt eine einfache Greybox, um den Spielablauf früh zu prüfen und Layoutfehler günstig zu ändern. Das Beispiel Island Jump erhöht die Sprungkraft über Sammelfortschritt. Seine großen Höhenabstände gehören deshalb zu einem anderen Bewegungssystem. [Roblox: Greybox a playable area](https://create.roblox.com/docs/tutorials/curriculums/core/building/greybox-a-playable-area).
+
+**Übernommen:** Ein prüfbarer Kernweg wird aus einfachen Kollisionsflächen gebaut; Kapitel und benannte Hindernistypen sollen darin bereits erkennbar sein. Die Route muss ohne Schmuck funktionieren.
+
+**Bewusst nicht übertragen:** Die Höhenabstände des Beispiels sind keine zulässigen Sprungweiten für MapForge. Keine Pflicht zum Münzsammeln oder Upgrade der Sprungkraft ableiten. Eine längere Map darf die unveränderte Bewegung nicht durch unerreichbare Abstände voraussetzen.
+
+## 2. Politur muss die bereits lesbare Route erhalten
+
+**Quellenbefund:** Die offizielle Fortsetzung ersetzt Platzhalter durch eine wiederverwendbare Assetbibliothek und ordnet die Welt weiterhin in benannte Modelle und Kategorien. Das Beispiel verwendet unter anderem Meshes und Materialvarianten. [Roblox: Apply polished assets](https://create.roblox.com/docs/tutorials/curriculums/core/building/apply-polished-assets).
+
+**Übernommen:** Jedes Kapitel erhält einen kleinen zusammenhängenden Baukasten. Eine Plattform kann Träger, Sockel, Kantenfassung und lokale Dekoration bekommen, während ihre begehbare Oberfläche klar bleibt. Der Baukasten dient mehreren Stellen desselben Themas.
+
+**Grenze:** Das bloße Erwähnen von PBR oder einer Bibliothek erzeugt keine importierten Texturen. Die aktuelle deterministische Umsetzung kann eigene Roblox-Primitives und Materialeigenschaften verwenden. Fremde Meshes, Texturen und Store-Assets sind durch diese Recherche weder geladen noch lizenziert worden.
+
+## 3. Bewegung bestimmt das erreichbare Layout
+
+**Quellenbefund:** Die Humanoid-API führt WalkSpeed, JumpHeight, JumpPower und UseJumpPower als Eigenschaften des Charakters. [Roblox: Humanoid](https://create.roblox.com/docs/reference/engine/classes/Humanoid).
+
+**Übernommen:** Der Generator muss das gewählte Bewegungsprofil beim Prüfen der Route berücksichtigen. Die Kernroute soll ohne optionalen Sprint erreichbar sein. Richtungswechsel und schmale Landungen erzeugen Präzisionsanforderungen innerhalb erreichbarer Sprünge; höhere Geschwindigkeit erweitert nicht automatisch das zulässige Sicherheitsfenster.
+
+**Prüfung in Studio:** Für jedes Profil werden die schwierigsten Sprünge an echter exportierter Geometrie geprüft: Anlauf, Überhöhung des Ziels, Deckenfreiheit, Avatargröße, Absprungkante, Landefläche und Korrekturmöglichkeit. Touch und Controller erhalten eigene Versuche. Datenheuristiken und statische Reichweitenprüfungen ersetzen diesen Ablauf nicht. Eine rechnerisch verbindbare Plattformfolge kann sich trotzdem schlecht spielen.
+
+## 4. Hinweise in der Welt statt dauernder Erklärung
+
+**Quellenbefund:** Roblox beschreibt visuelle Hinweise, kontextbezogene Tutorials und passend verzögerte Hilfen. Hinweise können in der Welt integriert werden und sollen die nächste Handlung verständlich machen. [Roblox: Onboarding techniques](https://create.roblox.com/docs/production/game-design/onboarding-techniques).
+
+**Übernommen:** Der erste Abschnitt zeigt einen einfachen Vertreter jeder später benötigten Sprungform. Große Podeste können Kapitelwechsel markieren und einen klaren Ausblick bieten. Eine hervorgehobene Kante, wiederkehrende Oberseite oder räumliche Rahmung unterstützt die Route. Form und Helligkeitsunterschied ergänzen Farbe.
+
+**Eigene Entscheidung:** Nach einer schweren Folge folgt eine ruhigere Landung mit Blick auf das nächste Kapitel. Ob diese Rhythmisierung Orientierung und Motivation verbessert, muss beobachtet werden; aus der Quelle folgt keine zugesicherte Spielerbindung. Neue zeitgesteuerte Tutoriallogik ist damit nicht automatisch implementiert.
+
+## 5. Streaming für eine hohe, detaillierte Welt
+
+**Quellenbefund:** Instance Streaming lädt Workspace-Inhalte abhängig vom Bedarf. Es kann Speicherbedarf und Einstieg verbessern. Modellgruppen können unter anderem atomar behandelt werden; zu große bewegte Einheiten können Spitzen verursachen. StreamingEnabled und mehrere Workspace-Streamingparameter werden in Studio gesetzt. [Roblox: Instance streaming](https://create.roblox.com/docs/workspace/streaming).
+
+**Übernommen für den Studio-Prüfplan:** Kapitel und kleine zusammenhängende Hindernisse sinnvoll gruppieren. Den gesamten Turm nicht vorsorglich zu einem immer geladenen Modell erklären. Respawn, Rückkehr nach tiefem Fall und ein Blick weit nach oben oder unten müssen mit aktiviertem Streaming geprüft werden. Eine Ferndarstellung ist kein Nachweis vorhandener Kollisionsflächen.
+
+**Grenze:** Diese Notiz aktiviert keine Studio-Einstellung. Die aktuelle Exportdatei muss separat auf ihre tatsächlichen Workspace-Eigenschaften geprüft werden. Garantierte Sichtweite, sofort geladene Respawnflächen und korrektes Verhalten auf speicherarmen Geräten sind ohne Engineprüfung nicht belegt.
+
+## 6. Grafik mit kontrolliertem Aufwand
+
+**Quellenbefund:** Roblox nennt unter anderem Objektdichte, Draw Calls, Schatten, transparente Überlagerungen, komplexe Kollisionen und große Texturen als mögliche Kosten. Wiederverwendung identischer Mesh-/Texturidentitäten kann Instancing ermöglichen. Statische Teile sollen verankert und unnötige Kollisionen vermieden werden. [Roblox: Improve performance](https://create.roblox.com/docs/performance-optimization/improve).
+
+**Übernommen:** Schmuck und begehbare Flächen werden getrennt bewertet. Dekorative Streben benötigen keine Spielkollision. Wiederkehrende Bauteile und Materialien bilden einen modularen Baukasten. Wenige große Fernelemente tragen die Skyline; kleine Schrauben, Pflanzenstücke oder Lichtdetails bleiben nahe am Weg. Viele übereinanderliegende Glasflächen und Partikelschichten werden vermieden.
+
+**Grenze:** Eine Teilezahl ist ein Budget, keine Bildratengarantie. Für die finale Map müssen Startbereich, dichteste Kapitelebene, höchster Aussichtspunkt und tiefer Fall auf einem schwächeren Zielgerät geprüft werden. Erst Messungen rechtfertigen weitere Optimierung oder höhere Detailbudgets.
+
+## 7. Architekturreferenz: Industrie, die aus einer Landschaft wächst
+
+**Quellenbefund:** Das UNESCO-Ensemble Rjukan–Notodden verbindet Wasserkraftwerke, Rohre, Übertragungsleitungen, Fabriken und Transportanlagen mit einer markanten Berg- und Tallandschaft. [UNESCO: Rjukan–Notodden Industrial Heritage Site](https://whc.unesco.org/en/list/1486/).
+
+**Eigenes Motiv:** Ein aufsteigendes Energiegerüst kann am Boden mit massiven Sockeln beginnen, über Rohrbündel und Trägergalerien führen und in einer offenen Maschinenkrone enden. Große vertikale Leitungen verbinden Kapitel visuell. Wiederholte Stahlrahmen erzeugen zusammenhängende Maßstäbe; Plattformen werden zu glaubwürdigen Wartungsflächen.
+
+**Abgrenzung:** Die Anregung betrifft Zusammenhalt, Maßstab und industrielle Formen. Weder konkrete historische Gebäude noch deren Grundrisse oder fremde Spielkarten werden kopiert. Bilder von der Quellseite werden nicht als Spieltexturen oder Produktbilder übernommen.
+
+## 8. Architekturreferenz: ein Gewächshaus als räumliches Gerüst
+
+**Quellenbefund:** Kew beschreibt am Palm House gebogene Konstruktion, Eisenarbeit, hohe Pflanzen, Wartungswege und Wendeltreppen. Die Seite nennt den Einfluss des Schiffbaus auf die Form. [Royal Botanic Gardens, Kew: Secrets of the Palm House revealed](https://www.kew.org/read-and-watch/palm-house-secrets-facts).
+
+**Eigenes Motiv:** Eine botanische Turmvariante kann Rippen, erhöhte Pflanztröge, kurze seitliche Balkone und eine leichte Krone kombinieren. Die Kapitel verändern den Anteil von dichter Vegetation zu offenem Himmel; eine wiederkehrende Rahmenform hält die Welt zusammen.
+
+**Abgrenzung:** Keine Rekonstruktion des Palm House. Die Referenz ist architektonisch ausgewertet; ein heruntergeladenes Referenzfoto konnte wegen Zugriffsschutz nicht lokal visuell geprüft werden. Pflanzen und Rippen dürfen weder Landekanten verdecken noch den Kameraraum füllen. Ein Glas-Eindruck braucht keine dicht gestapelten transparenten Wände.
+
+## Geprüfte Pluginwege und tatsächlicher Stand
+
+Der Skill **Plugin Management** wurde für die Suche und Bewertung angewandt. Es wurden ausschließlich lesende Aufrufe ausgeführt.
+
+| Weg | Nachweis am 26.10.2026 | Entscheidung |
+| --- | --- | --- |
+| Roblox-Integration | Die gezielte Suche im Pluginverzeichnis nach „Roblox“ lieferte keine Treffer. | Keine direkte Roblox-Steuerung behaupten. Die Suche ist kein vollständiger Beweis, dass es außerhalb dieses Ergebnisses keine Integration gibt. Weitere Angebote können im [Pluginverzeichnis](https://chatgpt.com/plugins) existieren. |
+| Higgsfield / 3D Jutsu | Die Projektabfrage war erfolgreich; die Projektliste war leer. Verfügbare Fähigkeiten umfassen Blender-Szenen, einen kuratierten GLB-Katalog und GLB-/Blend-Exporte. | Als möglicher späterer Modellierungsweg dokumentiert. Die Katalogsuche benötigt eine bestätigte projectId. Kein externes Projekt angelegt, kein Asset importiert und keine bezahlte Bild-/Videogenerierung gestartet. |
+| Figma | Die Pluginsuche meldete Figma als installiert. | Für ein Layout-/Moodboard möglich, für die aktuelle Roblox-Geometrie kein notwendiger Zwischenschritt. Kein Figma-Dokument erzeugt. |
+| Lokale Geometrie | Das Repo erzeugt Roblox-Dateien aus eigenem Code. | Für konsistente, reproduzierbare Kapitel, kollisionsarme Details und Exporte der direkt nutzbare Weg. Diese Dateien benötigen für die Erstellung kein neues Pluginprojekt. |
+
+Ein später bewusst gewählter 3D-Jutsu-Auftrag müsste ein eigenes Projekt auswählen oder anlegen, dessen Zustand prüfen, Katalogasset eindeutig suchen und erst dann importieren. Maße, Materialien und Export wären danach zu prüfen. Ein vorhandenes Plugin allein beweist keine Roblox-Kompatibilität und keinen Import in Studio.
+
+Native GUI-Steuerung ist in dieser Sitzung deaktiviert. Ein erfolgreicher Export, eine Browser-Vorschau oder eine Plugin-Projektliste belegen deshalb keinen Studio-Spieltest. Veröffentlichung, Kontoänderungen, Plugininstallationen und neue kostenpflichtige Aktionen wurden für diese Recherche nicht ausgeführt.
+
+## Abnahme für die fertige Map
+
+- Vier Kapitel sind an Geometrie und Raumgefühl unterscheidbar; ihre gemeinsame Material- und Formensprache bleibt erkennbar.
+- Schwierige Folgen erfordern kontrollierte Absprünge oder Landungen; bloße Weglänge gilt nicht als Skill.
+- Jede Pflichtlandung ist sichtbar und mit dem exportierten Bewegungsprofil erreichbar.
+- Dekoration erhält keine unbeabsichtigte Kollisionswirkung und versperrt keine Kamerasicht.
+- Laufzeit, Fallverhalten, Respawn und Streaming sind in Studio geprüft; Touch und Controller werden ausdrücklich berücksichtigt.
+- Tatsächlich gemessene Spielzeit und Geräteperformance werden getrennt von Schätzungen, Teilebudgets und Generatorprüfungen berichtet.
+
+Dies ist ein Abnahmeplan. Die Punkte sind durch die Recherche allein nicht als bestanden markiert.
+

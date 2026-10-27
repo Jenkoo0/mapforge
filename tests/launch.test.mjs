@@ -1,0 +1,36 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {generate,SCRIPT_FILES,validate} from '../web/engine.js';
+import {launchFiles} from '../web/launch-kit.js';
+import {makeZip} from '../web/zip.js';
+import {projectScope} from '../web/playability.js';
+test('launch kit carries the actual configuration, handoff, shop gaps and executable place',async()=>{
+ const scripts=Object.fromEntries(await Promise.all(Object.entries(SCRIPT_FILES).map(async([key,file])=>[key,await readFile(new URL('../web/lua/'+file+'.lua',import.meta.url),'utf8')])));
+ const map=generate({mode:'tycoon',name:'My Empire',plots:6,cashSmallId:'123'}),files=launchFiles(map,scripts,[{label:'Two players',done:false}]);
+ assert.ok(files['My-Empire.rbxlx'].includes('MapForgeTycoon'));
+ const launch=JSON.parse(files['Launch-Konfiguration.json']);
+ assert.equal(launch.recommendedMaxPlayers,6);assert.equal(launch.upgrades,48);assert.equal(launch.missingShopIds.length,11);assert.equal(launch.studioPlaytestRunByGenerator,false);
+ for(const field of ['auroraPassId','solarPassId','nebulaPassId'])assert.ok(launch.missingShopIds.includes(field));
+ assert.equal(JSON.parse(files['My-Empire.mapforge.json']).config.cashSmallId,'123');
+ assert.ok(files['Schritt-fuer-Schritt.md'].includes('My-Empire.rbxlx'));assert.ok(files['Schritt-fuer-Schritt.md'].includes('10.'));
+ assert.ok(files['KI-Uebergabe.md'].includes('My Empire'));assert.ok(files['KI-Uebergabe.md'].includes('[ ] Two players'));
+ assert.ok(files['Kaufplan-und-Referenzen.md'].includes('Contextual purchases'));
+ assert.ok(files['Spieltempo-und-Auftraege.md'].includes('Wählbare Aufträge'));
+ assert.ok(files['Verbesserungsverlauf.md'].includes('Verbesserungsprotokoll'));
+ assert.equal(JSON.parse(files['Spieltests.json']).records.length,0);
+ assert.ok(files['Spieltest-Auswertung.md'].includes('0 manuell eingetragene Tests'));
+ const observation={id:'qa-fixture',scope:projectScope(map.config),version:'3.2.0',revision:'fixture',createdAt:'2026-10-20',firstAction:40,minutes:7,blocker:'goals',returnIntent:'maybe',benefit:'comfort',note:'Testfixture, not a real player'};
+ const withFeedback=launchFiles(map,scripts,[],[observation]);
+ assert.equal(JSON.parse(withFeedback['Spieltests.json']).records[0].firstAction,40);
+ assert.equal(JSON.parse(withFeedback['My-Empire.mapforge.json']).playtests[0].id,'qa-fixture');
+ assert.ok(withFeedback['KI-Uebergabe.md'].includes('Testfixture, not a real player'));
+ const bytes=makeZip(files),v=new DataView(bytes.buffer);
+ assert.equal(v.getUint32(0,true),0x04034b50);assert.equal(v.getUint32(bytes.length-22,true),0x06054b50);assert.equal(v.getUint16(bytes.length-12,true),Object.keys(files).length);
+});
+test('layout checker catches missing buy buttons and physical path obstructions',()=>{
+ const map=generate({mode:'tycoon'});
+ map.parts=map.parts.filter(p=>p.name!=='P1_Button_u04');assert.equal(validate(map).find(c=>c.id==='economy').status,'error');
+ const path=map.paths[0];map.parts.push({id:99999,name:'blocked',plot:1,pos:[path.x,3,path.z],size:[4,6,4],collide:true,anchored:true,color:'#ffffff'});
+ assert.equal(validate(map).find(c=>c.id==='walkways').status,'error');
+});

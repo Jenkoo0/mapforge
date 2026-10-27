@@ -1,0 +1,17 @@
+import {writeFile,readFile} from 'node:fs/promises';
+import {UPGRADES,SKINS,RESEARCH,QUESTS,MILESTONES,CONTRACTS,CONTRACT_LIMIT,CALIBRATION,TYCOON_THEMES,upgradeName} from '../web/tycoon.js';
+import {VERSION} from '../web/engine.js';
+import {OFFER_RULES} from '../web/playability.js';
+const q=s=>JSON.stringify(s);
+const rows=UPGRADES.map(u=>`    {Id=${q(u.id)}, Name=${q(u.name)}, Cost=${u.cost}, Income=${u.income}, Requires=${u.requires?q(u.requires):'nil'}},`).join('\n');
+const skins=SKINS.map(s=>`    {Id=${q(s.id)}, Name=${q(s.name)}, Cost=${s.cost}, Color=${q(s.color)}},`).join('\n');
+const research=RESEARCH.map(r=>`    {Id=${q(r.id)}, Name=${q(r.name)}, Max=${r.max}, Base=${r.base}, Growth=${r.growth}, Detail=${q(r.detail)}},`).join('\n');
+const quests=QUESTS.map(r=>`    {Id=${q(r.id)}, Name=${q(r.name)}, Field=${q(r.field)}, Target=${r.target}, Reward=${r.reward}},`).join('\n');
+const milestones=MILESTONES.map(r=>`    {Id=${q(r.id)}, Count=${r.count}, Reward=${r.reward}},`).join('\n');
+const offers=OFFER_RULES.map(r=>`    {Key=${q(r.key)}, Pass=${!!r.pass}, Builds=${r.builds}, Seconds=${r.seconds}, Collects=${r.collects}, Design=${!!r.design}, Cash=${r.cash||0}},`).join('\n');
+const contracts=CONTRACTS.map(r=>`    {Id=${q(r.id)}, Name=${q(r.name)}, Metric=${q(r.metric)}, Target=${r.target}, Reward=${r.reward}},`).join('\n');
+let body=await readFile(new URL('economy-body.lua',import.meta.url),'utf8');
+const names=Object.keys(TYCOON_THEMES).map(theme=>`${theme}={${UPGRADES.map(u=>`[${q(u.id)}]=${q(upgradeName(u,theme))}`).join(',')}}`).join(',');
+body=`E.ThemeNames={${names}}\nfunction E.SetTheme(theme)\n local names=E.ThemeNames[theme] or E.ThemeNames.sky\n for _,u in ipairs(E.Upgrades) do u.Name=names[u.Id] end\nend\n`+body;
+body=`E.Calibration = {MinimumBuilds=${CALIBRATION.minimumBuilds}, Stations=${CALIBRATION.stations}, BonusFactor=${CALIBRATION.bonusFactor}, BonusSeconds=${CALIBRATION.bonusSeconds}, Cooldown=${CALIBRATION.cooldown}, MinimumInterval=${CALIBRATION.minimumInterval}}\n`+body;
+await writeFile(new URL('../web/lua/tycoon-economy.lua',import.meta.url),`-- MapForge ${VERSION}. Generated from the same economy plan used by the editor.\nlocal E = {}\nE.Upgrades = {\n${rows}\n}\nE.Skins = {\n${skins}\n}\nE.ResearchTracks = {\n${research}\n}\nE.Quests = {\n${quests}\n}\nE.Milestones = {\n${milestones}\n}\nE.OfferRules = {\n${offers}\n}\nE.Contracts = {\n${contracts}\n}\nE.ContractLimit = ${CONTRACT_LIMIT}\n${body}`);

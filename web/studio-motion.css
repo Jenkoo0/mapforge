@@ -1,0 +1,66 @@
+/* Native feedback: all transforms are decorative and never delay application work. */
+body[data-studio-theme] .page { animation: none; }
+
+.studio-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
+.studio-tool {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 36px; padding: 7px 10px; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--panel); color: var(--text);
+  font: inherit; font-size: 11px; font-weight: 600;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+.studio-tool svg { width: 15px; height: 15px; }
+.studio-tool:hover { border-color: var(--muted); }
+.studio-tool[aria-pressed="true"] { border-color: var(--lime); }
+.studio-tool:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+
+.studio-activity {
+  display: inline-flex; align-items: center; gap: 7px; min-width: 0;
+  max-width: min(420px, 100%); padding: 5px 8px;
+  border: 1px solid var(--line); border-radius: 6px;
+  background: var(--panel); color: var(--muted); font-size: 10px;
+  font-weight: 500; line-height: 1.5; overflow-wrap: anywhere;
+}
+.studio-activity::before {
+  content: ""; width: 5px; height: 5px; flex: 0 0 5px;
+  border-radius: 50%; background: currentColor;
+}
+.studio-activity[data-state="working"] { color: var(--text); }
+.studio-activity[data-state="working"]::before { border-radius: 1px; }
+.studio-activity[data-state="success"] { color: var(--lime); }
+.studio-activity[data-state="error"] { color: var(--danger); }
+
+body.studio-focus .main-wrap { margin-left: 0; }
+body.studio-focus .topbar { position: relative; z-index: 2; }
+body.studio-focus main { max-width: 1720px; }
+body.studio-focus #page-generator > .page-heading,
+body.studio-focus #page-generator > .studio-workflow,
+body.studio-focus #page-generator > .guide-entry,
+body.studio-focus #page-generator > .builder-jumps,
+body.studio-focus #page-generator > .section-label,
+body.studio-focus #page-generator > .feature-grid,
+body.studio-focus #map-config,
+body.studio-focus #page-generator .preview-column > :not(.preview-panel) { display: none; }
+body.studio-focus #page-generator .builder-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+body.studio-focus #page-generator .preview-column { display: block; }
+body.studio-focus #map-preview { max-width: none; scroll-margin-top: 16px; }
+body.studio-focus #map-preview .canvas-wrap { height: min(72dvh, 900px); min-height: 340px; }
+
+details.inspector-group > summary { cursor: pointer; }
+details.inspector-group > summary:focus-visible { outline: 2px solid var(--lime); outline-offset: -3px; }
+details.inspector-group > summary svg { transition: transform 140ms ease; }
+details.inspector-group[open] > summary svg.inspector-chevron { transform: rotate(90deg); }
+
+@media (min-width: 1051px) {
+  body.studio-focus .sidebar { display: none; }
+}
+
+@media (max-width: 580px) {
+  .studio-tools { gap: 5px; }
+  .studio-tool { min-height: 40px; padding: 8px 10px; }
+  .studio-activity { max-width: 100%; font-size: 10px; }
+  body.studio-focus #map-preview .canvas-wrap { height: 62dvh; min-height: 300px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-tool, details.inspector-group > summary svg { transition: none; }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "mapforge-roblox",
+  "version": "3.25.0-public.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node preview-dev.mjs",
+    "test": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "examples": "node tools/build-examples.mjs",
+    "build": "node tools/build-worker.mjs && node scripts/build.mjs && node scripts/validate-artifact.mjs",
+    "predev": "node tools/build-worker.mjs",
+    "pretest": "node tools/build-worker.mjs",
+    "test:cloud": "node scripts/cloud-test.mjs",
+    "test:lua": "python3 tools/check-lua.py"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
